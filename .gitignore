@@ -18,13 +18,15 @@ UAV-RWH-3D-Assets/
 
 # Node / tooling
 node_modules/
-dist/
 .vite/
 *.log
 .DS_Store
 .env
 .env.*
-
+# Ignore generic dist folders but keep the demo static build for school hosts
+dist/
+!web/thermal-3d-demo/dist/
+!web/thermal-3d-demo/dist/**
 # Authoring scratch next to clone
 osm-map.xml
 osm-buildings.json
