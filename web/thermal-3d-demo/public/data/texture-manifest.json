@@ -1,0 +1,89 @@
+{
+  "textures": [
+    {
+      "id": "core-rgb-a.jpg",
+      "file": "textures/core-rgb-a.jpg",
+      "source": "MAX_3300.JPG",
+      "kind": "rgb",
+      "bytes": 264009
+    },
+    {
+      "id": "core-rgb-b.jpg",
+      "file": "textures/core-rgb-b.jpg",
+      "source": "MAX_3350.JPG",
+      "kind": "rgb",
+      "bytes": 259328
+    },
+    {
+      "id": "core-rgb-c.jpg",
+      "file": "textures/core-rgb-c.jpg",
+      "source": "MAX_3388.JPG",
+      "kind": "rgb",
+      "bytes": 254313
+    },
+    {
+      "id": "core-ir-a.jpg",
+      "file": "textures/core-ir-a.jpg",
+      "raw": "textures/core-ir-a-raw.jpg",
+      "source": "IRX_3300.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 92036
+    },
+    {
+      "id": "core-ir-b.jpg",
+      "file": "textures/core-ir-b.jpg",
+      "raw": "textures/core-ir-b-raw.jpg",
+      "source": "IRX_3350.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 78720
+    },
+    {
+      "id": "core-ir-c.jpg",
+      "file": "textures/core-ir-c.jpg",
+      "raw": "textures/core-ir-c-raw.jpg",
+      "source": "IRX_3388.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 64582
+    },
+    {
+      "id": "core-mix-hero.jpg",
+      "file": "textures/core-mix-hero.jpg",
+      "source": "MIX_3350.JPG",
+      "kind": "rgb",
+      "bytes": 125494
+    },
+    {
+      "id": "rwh-ir-a.jpg",
+      "file": "textures/rwh-ir-a.jpg",
+      "raw": "textures/rwh-ir-a-raw.jpg",
+      "source": "IRX_3000.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 78891
+    },
+    {
+      "id": "rwh-ir-b.jpg",
+      "file": "textures/rwh-ir-b.jpg",
+      "raw": "textures/rwh-ir-b-raw.jpg",
+      "source": "IRX_3167.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 77603
+    },
+    {
+      "id": "rwh-ir-c.jpg",
+      "file": "textures/rwh-ir-c.jpg",
+      "raw": "textures/rwh-ir-c-raw.jpg",
+      "source": "IRX_3300.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 66937
+    },
+    {
+      "id": "rwh-ir-d.jpg",
+      "file": "textures/rwh-ir-d.jpg",
+      "raw": "textures/rwh-ir-d-raw.jpg",
+      "source": "IRX_3080.JPG",
+      "kind": "thermal-falsecolor",
+      "bytes": 89721
+    }
+  ],
+  "notes": "Curated subset for school embed; originals remain in UAV dump."
+}

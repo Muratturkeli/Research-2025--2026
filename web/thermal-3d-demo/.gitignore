@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+.vite/
+.env
+.env.*
+# dist/ is committed so school hosts can serve static files without a build step.
+# Rebuild with `npm run build` after source changes, then commit dist when shipping.

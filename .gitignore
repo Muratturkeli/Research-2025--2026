@@ -1,0 +1,36 @@
+# Large media — never commit the UAV dump or photogrammetry work folders
+UAV-RWH-3D-Assets/
+**/models/_src/
+**/thermal/_src/
+**/*.las
+**/*.laz
+**/*.p4b
+**/*.p4d
+**/*.p4r
+**/*.splat
+**/*.spz
+**/*.osgb
+**/*.tif
+**/*.tiff
+**/*.dng
+**/*.mp4
+**/*.zip
+
+# Node / tooling
+node_modules/
+dist/
+.vite/
+*.log
+.DS_Store
+.env
+.env.*
+
+# Authoring scratch next to clone
+osm-map.xml
+osm-buildings.json
+osm-buildings-parsed.json
+overpass-query.txt
+_parse_osm.py
+_curate_textures.py
+_export_buildings_json.py
+nominatim-*.json
