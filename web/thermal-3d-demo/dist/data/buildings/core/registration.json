@@ -1,0 +1,34 @@
+{
+  "method": "COLMAP GPS model_aligner (ECEF) + UTM lidar; projection via ECEF camera poses",
+  "horizontal_offset_mean_camera_to_core_origin_m": 29.461611631790706,
+  "mean_camera_utm": [
+    545643.6943074341,
+    4485790.778179316
+  ],
+  "core_origin_utm": [
+    545627.51,
+    4485766.16
+  ],
+  "geoid_offset_applied_m": -33.0,
+  "reprojection_note": "COLMAP sparse mean reprojection error was 1.29 px (from model_analyzer). Lidar-photogrammetry ICP RMSE not computed in this pass; horizontal camera-origin offset reported above.",
+  "colmap_sparse_points": 33660,
+  "colmap_registered_images": 84,
+  "colmap_mean_reproj_error_px": 1.291175,
+  "openmvs_dense": {
+    "file": "photo_dense_preview.bin",
+    "source_ply": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\_work\\openmvs\\scene_dense.ply",
+    "points_in_clip": 10988,
+    "nn_rmse_to_lidar_m": 10.377479351334602,
+    "nn_median_to_lidar_m": 5.377880932170552,
+    "nn_matches": 10988,
+    "geoid_offset_m": -33.0,
+    "note": "Ballpark NN against lidar subsample after ECEF\u2192UTM; not a full ICP. Vertical datum is the dominant uncertainty.",
+    "centroid_align_shift_m": [
+      11.326151847839355,
+      1.8431570529937744,
+      -0.10733222961425781
+    ],
+    "nn_rmse_to_elevated_lidar_m": 8.513541221618652,
+    "nn_median_to_elevated_lidar_m": 3.633286952972412
+  }
+}

@@ -4,6 +4,8 @@ UAV-RWH-3D-Assets/
 **/thermal/_src/
 **/*.las
 **/*.laz
+# Allow small per-building lidar clips shipped with the demo
+!web/thermal-3d-demo/**/data/buildings/**/lidar.laz
 **/*.p4b
 **/*.p4d
 **/*.p4r
@@ -36,3 +38,7 @@ _parse_osm.py
 _curate_textures.py
 _export_buildings_json.py
 nominatim-*.json
+_work_scripts/
+web/thermal-3d-demo/_work/
+web/thermal-3d-demo/screenshots.mjs
+**/playwright-report/

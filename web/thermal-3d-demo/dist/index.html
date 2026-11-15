@@ -2,93 +2,47 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="Interactive 3D thermal visualization — Rutgers Richard Weeks Hall & CoRE Building" />
-    <title>RWH × CoRE · Thermal 3D</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CoRE Building — Lidar + Thermal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script type="module" crossorigin src="./assets/index-DlT_xUZ9.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BBDH6cCy.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-nrt3IK05.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CX_tI9d8.css">
   </head>
   <body>
     <div id="app">
-      <canvas id="c" aria-label="3D campus thermal scene"></canvas>
+      <canvas id="c"></canvas>
 
-      <header class="hud-top" aria-label="Demo branding">
-        <div class="brand-block">
-          <p class="brand">NEXUS LAB · UAV THERMOGRAPHY</p>
-          <h1>RWH × CoRE</h1>
-          <p class="tagline">Interactive building-envelope thermal response</p>
+      <header class="top">
+        <div>
+          <h1>CoRE Building</h1>
+          <p class="sub">Rutgers Busch Campus · measured point cloud</p>
         </div>
-        <div class="status-chip" id="statusChip" role="status">BOOT</div>
+        <div class="buildings">
+          <button type="button" class="active" disabled>CoRE</button>
+          <button type="button" class="pending" disabled title="Deferred to a later pass">RWH: pending</button>
+        </div>
       </header>
 
-      <aside class="hud-panel" aria-label="Thermal controls">
-        <div class="panel-head">
-          <span class="eyebrow">CONTROL DECK</span>
-          <h2>Environment</h2>
+      <aside class="panel">
+        <label class="row"><input type="checkbox" id="showLidar" checked /> Lidar geometry</label>
+        <label class="row"><input type="checkbox" id="showPhoto" /> UAV dense (registered)</label>
+        <label class="row"><input type="checkbox" id="showThermal" checked /> Thermal layer</label>
+        <label class="row">Point size <input type="range" id="pointSize" min="1" max="4" step="0.1" value="1.6" /></label>
+        <div class="legend">
+          <div class="legend-title">Thermal</div>
+          <div class="ramp" aria-hidden="true"></div>
+          <div class="legend-scale"><span>cooler</span><span>relative intensity</span><span>warmer</span></div>
+          <p class="note">Not absolute °C — JPEG IR is relative intensity.</p>
         </div>
-
-        <label class="ctrl">
-          <span>Thermal blend <em id="v-blend">0.55</em></span>
-          <input id="blend" type="range" min="0" max="1" step="0.01" value="0.55" />
-        </label>
-
-        <label class="ctrl">
-          <span>Palette contrast <em id="v-palette">1.15</em></span>
-          <input id="palette" type="range" min="0.6" max="1.8" step="0.01" value="1.15" />
-        </label>
-
-        <label class="ctrl">
-          <span>Ambient °C look <em id="v-ambient">12</em></span>
-          <input id="ambient" type="range" min="-5" max="35" step="0.5" value="12" />
-        </label>
-
-        <label class="ctrl">
-          <span>Solar W/m² <em id="v-solar">420</em></span>
-          <input id="solar" type="range" min="0" max="1000" step="10" value="420" />
-        </label>
-
-        <label class="ctrl">
-          <span>Wind m/s <em id="v-wind">3.5</em></span>
-          <input id="wind" type="range" min="0" max="18" step="0.1" value="3.5" />
-        </label>
-
-        <label class="ctrl">
-          <span>Humidity % <em id="v-humidity">48</em></span>
-          <input id="humidity" type="range" min="10" max="95" step="1" value="48" />
-        </label>
-
-        <div class="preset-row" role="group" aria-label="Presets">
-          <button type="button" data-preset="coldClear">Cold clear</button>
-          <button type="button" data-preset="hotSunny">Hot sunny</button>
-          <button type="button" data-preset="windyDamp">Windy damp</button>
-        </div>
-
-        <p class="fineprint">
-          Looks-first EnvCalib-style drivers — relative LUT response, not absolute °C.
-        </p>
       </aside>
 
-      <footer class="hud-bottom">
-        <div class="readout" id="readout">
-          <span>CORE · RGB+IR</span>
-          <span>RWH · IR MASSING</span>
-          <span>OSM FOOTPRINTS</span>
-        </div>
-        <div class="hint">Drag orbit · scroll zoom · pinch on mobile</div>
-      </footer>
+      <div class="compass" id="compass" aria-label="North">N</div>
+      <div class="scale" id="scale"><i></i><span>50 m</span></div>
 
-      <div class="loading" id="loading">
-        <div class="loading-inner">
-          <p class="brand">CALIBRATING SCENE</p>
-          <div class="bar"><i id="loadBar"></i></div>
-        </div>
-      </div>
+      <footer class="prov" id="prov">Loading provenance…</footer>
+      <div class="loading" id="loading">Loading point cloud…</div>
     </div>
   </body>
 </html>

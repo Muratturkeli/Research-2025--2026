@@ -1,129 +1,121 @@
-# 3D Thermal Demo — Build & Retexture Guide
+# CoRE Building 3D Thermal Point-Cloud Demo — Build Guide
 
-This guide explains how the **RWH × CoRE** interactive demo was built and how to rebuild, retexture, or upgrade it to a photogrammetry GLB / Gaussian splat later.
+Accuracy-first rebuild (2026-11-14). **CoRE only** in the viewer; **RWH is pending** by design.
 
-## Layout
+## What you get
 
-```
-Research-2025--2026/
-├── docs/3d-demo-build-guide.md          ← this file
-├── web/thermal-3d-demo/
-│   ├── package.json                     ← three@0.170.0, vite@5.4.11 (pinned)
-│   ├── index.html
-│   ├── public/
-│   │   ├── data/buildings.json          ← OSM footprints → local meters
-│   │   ├── data/texture-manifest.json
-│   │   └── textures/*.jpg               ← curated ~2 MB set
-│   └── src/
-│       ├── main.js
-│       ├── styles.css
-│       ├── scene/{campus,buildings,materials,envResponse}.js
-│       └── ui/hud.js
-└── (notebooks…)
-```
+Interactive browser viewer of **measured** geometry for Rutgers **Computing Research & Education (CoRE)**:
 
-## Prerequisites
+1. **Airborne lidar base** (USGS 3DEP / NJ Sandy 2014 tile) clipped around CoRE with ground + context  
+2. **UAV photogrammetry** from Murat’s Core March 22_2 `MAX_*` (COLMAP sparse poses + OpenMVS dense)  
+3. **Thermal layer** projected from paired `IRX_*` using COLMAP camera poses (relative intensity; uncovered points left neutral)
 
-- Node.js ≥ 18
-- Optional for rebuild of textures: Python 3 + Pillow
-- Optional for Phase 2 mesh: Metashape / RealityCapture / WebODM / Blender
-- Optional for Phase 2 splat: Postshot / nerfstudio / gsplat
+Layout is building-agnostic: `public/data/buildings/<id>/`.
 
-## Run locally
-
-Do **not** look under `UAV-RWH-3D-Assets` for `npm run dev` — that directory is the raw UAV dump. The Vite app is `web/thermal-3d-demo` in this repo (local clone often named `Research-2025--2026-thermal-demo`).
+## Run
 
 ```bash
 cd web/thermal-3d-demo
 npm install
 npm run dev
+# or: npm run build && npm run preview
 ```
 
-Built static copy for double-click serving (not `file://`):
+Openable package (no install): `C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\` → `serve.bat`
 
-`C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\` → run `serve.bat`
+## Data sources & licenses
 
-## Geometry source (v1)
+| Layer | Dataset | Year | License |
+|-------|---------|------|---------|
+| Lidar | `NJ_SdL5_2014` / USGS LPC `USGS_LPC_NJ_New_Jersey_SANDY_LiDAR_15_18TWK445850.laz` | 2014 | USGS 3DEP public domain |
+| RGB / IR | `UAV-RWH-3D-Assets/drone-images/Core March 22_2` `MAX_*` / `IRX_*` | 2025-03-22 flight | Project research imagery |
+| Upgrade path | `NJ_NE6County_B23` (acq. 2023–2025) LAZ via rockyweb/TNM | newer | USGS 3DEP public domain — download was in progress; swap when complete |
 
-1. Queried OpenStreetMap Overpass for:
-   - `Richard Weeks Hall of Engineering`
-   - `Computing Research & Education Building (CoRE)`
-2. Converted lon/lat rings to a shared local-meter frame (`buildings.json`).
-3. Extruded footprints in Three.js with bevel, roof HVAC, RWH cantilever accent, façade UV projection, and dual-texture thermal shader.
+**Not used as geometry:** OSM extrusions, Google Photorealistic 3D Tiles (API-key streaming only; terms disallow extract/re-host).
 
-**No redistributable Sketchfab / university GLB** for these buildings was found with a clear license. OSM footprints (ODbL) + authored massing is the v1 path.
+## Tool versions (this build)
 
-### Replace with a future GLB
+| Tool | Version | Path / note |
+|------|---------|-------------|
+| Node | ≥18 | |
+| three / vite | 0.170.0 / 5.4.11 | `package.json` pinned |
+| COLMAP | 4.2.1 CUDA (+ nocuda available) | `web/thermal-3d-demo/_work/tools/colmap/` |
+| OpenMVS | 2.4.0 Windows x64 | `_work/tools/OpenMVS/` |
+| PotreeConverter | 2.1.1 | optional octree export |
+| Python | 3.13 + `laspy[lazrs]`, `pyproj`, `Pillow`, `numpy` | |
 
-1. Export `models/core-building.glb` (and optionally `rwh-building.glb`) &lt; ~25 MB.
-2. In `src/scene/campus.js`, load with `GLTFLoader` and swap the massing group for that building id.
-3. Keep the same HUD / `applyEnvToMaterial` path: either bake IR into materials or keep the custom shader on cloned meshes.
-4. Document the GLB license in `web/thermal-3d-demo/THIRD_PARTY_LICENSES.md`.
+`_work/` is local scratch — **do not commit** (raw LAZ, COLMAP DB, OpenMVS depth maps).
 
-### Phase 2 — Core photogrammetry / splat
+## Pipeline steps
 
-Staged inputs (do not commit raw flights):
+### 1. Lidar clip (CoRE)
 
-- RGB: unique `MAX_*.JPG` from `Core March 22_2` / `_3` (~167 each)
-- IR pairs: matching `IRX_*.JPG` by numeric suffix
+```bash
+# Download USGS LPC tile covering campus (example Sandy 2014):
+# https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/NJ_New_Jersey_SANDY_LiDAR_15/...
 
-Suggested pipeline:
+python _work_scripts/clip_core_laz.py NJ_SdL5_2014
+# Prefer B23 when the LAZ is complete/readable:
+# python _work_scripts/clip_core_laz.py NJ_NE6County_B23
+```
 
-1. Copy unique MAX frames to a local **non-OneDrive** work folder.
-2. Run Metashape / WebODM → textured mesh → decimate in Blender → GLB.
-3. Optional: train a splat for hero marketing views; keep mesh for school embed.
-4. Align IR by filename index (`MAX_3350` ↔ `IRX_3350`) for façade projection.
+Writes `public/data/buildings/core/lidar.laz`, `lidar_preview.bin`, `manifest.json`.
 
-Gaussian splat was **not** run on the build agent (no COLMAP/Metashape/ffmpeg). Treat splat as Phase 2.
+### 2. COLMAP sparse (poses)
 
-## Retexture from the UAV dump
+```powershell
+# Stage MAX frames (stride 2 used here → 84 images)
+# Then:
+web/thermal-3d-demo/_work/tools/colmap/bin/colmap.exe automatic_reconstructor `
+  --workspace_path .../workspace --image_path .../images --quality medium --dense 0 --use_gpu 1
+colmap model_aligner ... --ref_is_gps 1 --alignment_type ecef
+python _work_scripts/export_colmap_cameras.py
+```
 
-Original dump (never commit wholesale):
+This build: **84/84 images registered**, **33 660 sparse points**, **mean reprojection error 1.29 px**.
 
-`C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\`
+### 3. Dense photogrammetry
 
-Helper scripts used during authoring (can live outside git or under `web/thermal-3d-demo/scripts/`):
+COLMAP `patch_match_stereo` **crashed** on RTX 5070 Laptop (CUDA exit `0xC0000409`). Fallback:
 
-1. Pick representative `MAX_*` / `IRX_*` stills.
-2. Downsample (RGB ≤1280 px wide, IR ≤1024).
-3. Map IR grayscale → ironbow-style false color for materials.
-4. Write `public/textures/` + `texture-manifest.json`.
+```powershell
+# InterfaceCOLMAP + DensifyPointCloud (OpenMVS CPU)
+_work_scripts/openmvs_dense.ps1
+python _work_scripts/register_dense_ply.py
+```
 
-Update `buildings.json` `textures` arrays if you rename files.
+Dense PLY ≈ 884 k points; after ECEF→UTM + Core clip + centroid align to elevated lidar: **~11 k points** in clip, **NN median ≈ 3.6 m** / **RMSE ≈ 8.5 m** vs elevated lidar (ballpark, not full ICP). Treat as façade detail layer, **not** the metric base.
 
-## Environment slider math
+### 4. Thermal projection
 
-`src/scene/envResponse.js` maps ambient / solar / wind / humidity into:
+```bash
+python _work_scripts/register_and_project_thermal.py
+```
 
-- façade warmth, roof heat, glass cool
-- palette contrast
-- sun elevation / azimuth
-- emissive boost
+Projects `IRX_*` with COLMAP ECEF poses onto lidar points. **Uncovered → mask 0 / neutral.** Units: **relative thermal intensity** (not confirmed radiometric).
 
-This mirrors the **shape** of EnvCalib zone drivers from the research notebooks without claiming radiometric accuracy.
+This build: **42 IR frames used**, **~16.9%** of a 400 k lidar subsample covered.
 
-## School embed checklist
+EnvCalib weather sliders: **omitted** (coefficients not wired; do not fake response).
 
-- [ ] `npm run build` → host `dist/` over HTTPS
-- [ ] iframe: `allow-scripts allow-same-origin`; min height ~560px
-- [ ] Confirm total transfer (textures + JS) stays comfortable on campus Wi‑Fi
-- [ ] Prefer reduced-motion: CSS already disables animations when requested
+### 5. Viewer
 
-## Gaps remaining
+Vite + Three.js Points loader over `*_preview.bin`. Minimal UI: layers, legend with units, scale bar, north, provenance footer. `RWH: pending` control disabled.
 
-| Gap | Impact | Next step |
-|-----|--------|-----------|
-| No RWH RGB (`MAX_*`) | RWH stays massing + IR | Capture / provide Weeks Hall visual orbit |
-| No browser GLB from Pix4D | Core not photoreal | Re-export OBJ/GLB or reprocess MAX set |
-| No absolute °C | Demo is relative LUT | Optional Phase 4 radiometric path |
-| OSM height tags incomplete on RWH | Assumed ~24 m | Confirm with campus drawings |
+## RWH later (do not invent)
 
-## License summary
+Needs:
 
-| Asset | License / note |
-|-------|----------------|
-| OSM footprints | ODbL — © OpenStreetMap contributors |
-| Demo source | Part of Murat Turkeli Research-2025--2026 |
-| Curated flight stills | Project research imagery — not for unrelated redistribution |
-| Fonts (Outfit, IBM Plex Mono) | Google Fonts / SIL OFL |
-| three / vite | MIT |
+1. Post-2018 lidar covering Weeks Hall (e.g. finished `NJ_NE6County_B23` tiles) — RWH opened 2018; **2014 Sandy does not contain it**  
+2. Optional RWH RGB flight (none in dump — only `IRX_*`)  
+3. Same folder pattern: `public/data/buildings/rwh/` + manifest entry  
+
+Keep RWH out of the viewer until those exist.
+
+## Google 3D Tiles (optional context only)
+
+Would need Murat’s **Maps 3D / Photorealistic tiles API key + billing**. Cannot be committed or school-hosted as extracted geometry. Leave out until requested.
+
+## School embed size
+
+Committed Core preview data ≈ **14 MB** (lidar bin + thermal + laz). Full `_work` intermediates stay local.

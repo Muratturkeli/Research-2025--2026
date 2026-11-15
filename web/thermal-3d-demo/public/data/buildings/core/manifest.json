@@ -1,0 +1,154 @@
+{
+  "building_id": "core",
+  "name": "Computing Research & Education Building (CoRE)",
+  "geometry_layers": [
+    {
+      "id": "lidar",
+      "type": "airborne_lidar",
+      "dataset": "NJ_SdL5_2014",
+      "year": "2014",
+      "acquisition": "Post-Sandy QL2",
+      "license": "USGS 3DEP public domain",
+      "crs": "EPSG:26918 (NAD83 UTM zone 18N); local XY relative to origin; Z relative to ~1st pct ground",
+      "origin_utm18n": [
+        545627.51,
+        4485766.16
+      ],
+      "origin_lonlat": [
+        -74.46135,
+        40.52137
+      ],
+      "clip_half_extent_m": 220.0,
+      "point_count_clip": 651333,
+      "point_count_preview": 651333,
+      "z0_m": 26.05,
+      "class_counts": {
+        "1": 272034,
+        "2": 200375,
+        "7": 69,
+        "17": 132143,
+        "18": 46712
+      },
+      "files": {
+        "laz": "lidar.laz",
+        "preview_bin": "lidar_preview.bin"
+      }
+    },
+    {
+      "id": "colmap_sparse",
+      "type": "uav_photogrammetry_sparse",
+      "source": "COLMAP 4.2.1 CUDA, 84 MAX frames stride-2 from Core March 22_2",
+      "points": 33660,
+      "registered_images": 84,
+      "mean_reproj_error_px": 1.291175,
+      "status": "poses used for thermal projection"
+    },
+    {
+      "id": "photo_dense",
+      "type": "uav_photogrammetry_dense",
+      "source": "OpenMVS 2.4.0 DensifyPointCloud from COLMAP undistorted Core March 22_2 (84 MAX)",
+      "points_in_clip": 10988,
+      "files": {
+        "preview_bin": "photo_dense_preview.bin"
+      },
+      "registration_to_lidar_nn_rmse_m": 8.513541221618652,
+      "registration_to_lidar_nn_median_m": 3.633286952972412,
+      "status": "centroid-aligned ballpark NN vs elevated lidar; not full ICP"
+    }
+  ],
+  "pending": {
+    "rwh": "Deferred \u2014 add lidar clip + thermal later; do not invent geometry."
+  },
+  "thermal_layer": {
+    "type": "projected_thermal",
+    "units": "relative_thermal_intensity",
+    "radiometric": false,
+    "source_flight": "Core March 22_2 IRX_* paired to MAX_* by filename",
+    "frames_used": [
+      "IRX_3266.JPG",
+      "IRX_3270.JPG",
+      "IRX_3274.JPG",
+      "IRX_3278.JPG",
+      "IRX_3282.JPG",
+      "IRX_3286.JPG",
+      "IRX_3290.JPG",
+      "IRX_3294.JPG",
+      "IRX_3298.JPG",
+      "IRX_3302.JPG",
+      "IRX_3306.JPG",
+      "IRX_3310.JPG",
+      "IRX_3314.JPG",
+      "IRX_3318.JPG",
+      "IRX_3322.JPG",
+      "IRX_3326.JPG",
+      "IRX_3330.JPG",
+      "IRX_3334.JPG",
+      "IRX_3338.JPG",
+      "IRX_3342.JPG",
+      "IRX_3346.JPG",
+      "IRX_3350.JPG",
+      "IRX_3354.JPG",
+      "IRX_3358.JPG",
+      "IRX_3362.JPG",
+      "IRX_3366.JPG",
+      "IRX_3370.JPG",
+      "IRX_3374.JPG",
+      "IRX_3378.JPG",
+      "IRX_3382.JPG",
+      "IRX_3386.JPG",
+      "IRX_3390.JPG",
+      "IRX_3394.JPG",
+      "IRX_3398.JPG",
+      "IRX_3402.JPG",
+      "IRX_3406.JPG",
+      "IRX_3410.JPG",
+      "IRX_3414.JPG",
+      "IRX_3418.JPG",
+      "IRX_3422.JPG",
+      "IRX_3426.JPG",
+      "IRX_3430.JPG"
+    ],
+    "frames_missing_ir": [],
+    "coverage_fraction_of_projected_subset": 0.16928,
+    "point_subset_count": 400000,
+    "uncovered_policy": "left neutral / masked; not filled",
+    "files": {
+      "colors": "thermal_colors.bin",
+      "mask": "thermal_mask.bin"
+    }
+  },
+  "registration": {
+    "method": "COLMAP GPS model_aligner (ECEF) + UTM lidar; projection via ECEF camera poses",
+    "horizontal_offset_mean_camera_to_core_origin_m": 29.461611631790706,
+    "mean_camera_utm": [
+      545643.6943074341,
+      4485790.778179316
+    ],
+    "core_origin_utm": [
+      545627.51,
+      4485766.16
+    ],
+    "geoid_offset_applied_m": -33.0,
+    "reprojection_note": "COLMAP sparse mean reprojection error was 1.29 px (from model_analyzer). Lidar-photogrammetry ICP RMSE not computed in this pass; horizontal camera-origin offset reported above.",
+    "colmap_sparse_points": 33660,
+    "colmap_registered_images": 84,
+    "colmap_mean_reproj_error_px": 1.291175,
+    "openmvs_dense": {
+      "file": "photo_dense_preview.bin",
+      "source_ply": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\_work\\openmvs\\scene_dense.ply",
+      "points_in_clip": 10988,
+      "nn_rmse_to_lidar_m": 10.377479351334602,
+      "nn_median_to_lidar_m": 5.377880932170552,
+      "nn_matches": 10988,
+      "geoid_offset_m": -33.0,
+      "note": "Ballpark NN against lidar subsample after ECEF\u2192UTM; not a full ICP. Vertical datum is the dominant uncertainty.",
+      "centroid_align_shift_m": [
+        11.326151847839355,
+        1.8431570529937744,
+        -0.10733222961425781
+      ],
+      "nn_rmse_to_elevated_lidar_m": 8.513541221618652,
+      "nn_median_to_elevated_lidar_m": 3.633286952972412
+    }
+  }
+}

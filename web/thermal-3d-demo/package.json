@@ -2,18 +2,19 @@
   "name": "rwh-core-thermal-3d-demo",
   "version": "1.0.0",
   "private": true,
-  "description": "Interactive 3D thermal visualization of Rutgers Richard Weeks Hall and CoRE Building",
+  "description": "Research-grade CoRE Building lidar + projected thermal point-cloud viewer",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --host",
-    "check": "node --check src/main.js && node --check src/scene/campus.js && node --check src/scene/buildings.js && node --check src/scene/materials.js && node --check src/scene/envResponse.js && node --check src/ui/hud.js"
+    "check": "node --check src/main.js"
   },
   "dependencies": {
     "three": "0.170.0"
   },
   "devDependencies": {
+    "playwright": "^1.65.1",
     "vite": "5.4.11"
   },
   "engines": {
