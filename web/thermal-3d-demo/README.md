@@ -1,15 +1,17 @@
-# CoRE Building — Lidar + Thermal Point Cloud
+# CoRE Building — Google-style 3D + thermal
 
-Research-grade browser viewer for Rutgers **CoRE** (Computing Research & Education Building).
+School-embeddable viewer for Rutgers **CoRE**:
 
-- **Base geometry:** USGS 3DEP airborne lidar (NJ Sandy 2014 clip), ~651 k points with ground/context  
-- **UAV layer:** COLMAP poses + OpenMVS dense from Core March 22_2 `MAX_*` (registration to lidar reported in `registration.json`)  
-- **Thermal:** `IRX_*` projected with camera poses; relative intensity; uncovered points not filled  
-- **RWH:** pending (control disabled)
+- **Primary:** streamed Google Photorealistic 3D Tiles (Map Tiles API) when a usable key is present  
+- **Thermal add-on:** own registered IRX-colored building points (visibility-filtered), toggle + opacity  
+- **Fallback:** USGS lidar + UAV photogrammetry if the key is missing or Map Tiles returns 403  
+- **RWH:** pending  
 
 ```bash
 npm install
 npm run dev
 ```
 
-See `docs/3d-demo-build-guide.md` at the repo root for the full pipeline, licenses, and how to add RWH later.
+Put the API key (single line) in `C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\google-maps-key.txt`. Enable **Map Tiles API** / Photorealistic 3D Tiles on that key. Never commit the key.
+
+See `docs/3d-demo-build-guide.md` for attribution rules and the measured-data pipeline.

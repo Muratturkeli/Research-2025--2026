@@ -42,3 +42,11 @@ _work_scripts/
 web/thermal-3d-demo/_work/
 web/thermal-3d-demo/screenshots.mjs
 **/playwright-report/
+
+web/thermal-3d-demo/.env.local
+**/.env.local
+**/google-maps-key.txt
+
+
+web/thermal-3d-demo/**/photo_dense_aligned.npz
+

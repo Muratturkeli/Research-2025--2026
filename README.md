@@ -4,9 +4,9 @@ by Murat Turkeli
 
 UAV thermography, environment-conditioned calibration (EnvCalib), façade segmentation, and visualization notebooks for Rutgers **Richard Weeks Hall** research.
 
-## Interactive 3D thermal point-cloud demo (CoRE)
+## Interactive 3D thermal demo (CoRE)
 
-Accuracy-first measured point cloud for **CoRE** (RWH pending):
+Google Maps–style Photorealistic 3D Tiles base + thermal overlay for **CoRE** (RWH pending). Falls back to measured lidar/photogrammetry without a usable Map Tiles key.
 
 - Path: [`web/thermal-3d-demo/`](./web/thermal-3d-demo/)
 - Build guide: [`docs/3d-demo-build-guide.md`](./docs/3d-demo-build-guide.md)
@@ -17,4 +17,4 @@ npm install
 npm run dev
 ```
 
-Geometry: USGS 3DEP lidar + COLMAP/OpenMVS from Core `MAX_*`; thermal from projected `IRX_*`. Raw multi-GB flights stay out of git.
+Key (optional): `UAV-RWH-3D-Assets/google-maps-key.txt` — never commit. Raw multi-GB flights stay out of git.

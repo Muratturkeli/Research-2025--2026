@@ -46,79 +46,40 @@
     {
       "id": "photo_dense",
       "type": "uav_photogrammetry_dense",
-      "source": "OpenMVS 2.4.0 DensifyPointCloud from COLMAP undistorted Core March 22_2 (84 MAX)",
-      "points_in_clip": 10988,
+      "role": "primary_building_geometry",
+      "source": "OpenMVS dense from COLMAP ECEF-aligned Core March 22_2 MAX (ICP to lidar)",
+      "points_in_clip": 884003,
+      "points_preview": 884003,
       "files": {
-        "preview_bin": "photo_dense_preview.bin"
+        "preview_bin": "photo_dense_preview.bin",
+        "aligned_npz": "photo_dense_aligned.npz"
       },
-      "registration_to_lidar_nn_rmse_m": 8.513541221618652,
-      "registration_to_lidar_nn_median_m": 3.633286952972412,
-      "status": "centroid-aligned ballpark NN vs elevated lidar; not full ICP"
+      "registration_to_lidar_nn_rmse_m": 4.243552139631259,
+      "registration_to_lidar_nn_median_m": 3.2259136152389045,
+      "icp_fitness_1m": 0.2538165997636877,
+      "icp_inlier_rmse_1m": 0.5337568562378645
     }
   ],
   "pending": {
     "rwh": "Deferred \u2014 add lidar clip + thermal later; do not invent geometry."
   },
   "thermal_layer": {
-    "type": "projected_thermal",
+    "type": "projected_thermal_on_building_points",
     "units": "relative_thermal_intensity",
     "radiometric": false,
-    "source_flight": "Core March 22_2 IRX_* paired to MAX_* by filename",
-    "frames_used": [
-      "IRX_3266.JPG",
-      "IRX_3270.JPG",
-      "IRX_3274.JPG",
-      "IRX_3278.JPG",
-      "IRX_3282.JPG",
-      "IRX_3286.JPG",
-      "IRX_3290.JPG",
-      "IRX_3294.JPG",
-      "IRX_3298.JPG",
-      "IRX_3302.JPG",
-      "IRX_3306.JPG",
-      "IRX_3310.JPG",
-      "IRX_3314.JPG",
-      "IRX_3318.JPG",
-      "IRX_3322.JPG",
-      "IRX_3326.JPG",
-      "IRX_3330.JPG",
-      "IRX_3334.JPG",
-      "IRX_3338.JPG",
-      "IRX_3342.JPG",
-      "IRX_3346.JPG",
-      "IRX_3350.JPG",
-      "IRX_3354.JPG",
-      "IRX_3358.JPG",
-      "IRX_3362.JPG",
-      "IRX_3366.JPG",
-      "IRX_3370.JPG",
-      "IRX_3374.JPG",
-      "IRX_3378.JPG",
-      "IRX_3382.JPG",
-      "IRX_3386.JPG",
-      "IRX_3390.JPG",
-      "IRX_3394.JPG",
-      "IRX_3398.JPG",
-      "IRX_3402.JPG",
-      "IRX_3406.JPG",
-      "IRX_3410.JPG",
-      "IRX_3414.JPG",
-      "IRX_3418.JPG",
-      "IRX_3422.JPG",
-      "IRX_3426.JPG",
-      "IRX_3430.JPG"
-    ],
-    "frames_missing_ir": [],
-    "coverage_fraction_of_projected_subset": 0.16928,
-    "point_subset_count": 400000,
-    "uncovered_policy": "left neutral / masked; not filled",
+    "source_flight": "Core March 22_2 IRX_*",
+    "visibility": "soft z-buffer per IR frame",
+    "coverage_fraction": 0.99772,
+    "frames_used_count": 84,
+    "point_source": "photo_dense",
     "files": {
-      "colors": "thermal_colors.bin",
-      "mask": "thermal_mask.bin"
+      "thermal_building": "thermal_building.bin",
+      "thermal_building_mask": "thermal_building_mask.bin",
+      "thermal_visible": "thermal_visible.bin"
     }
   },
   "registration": {
-    "method": "COLMAP GPS model_aligner (ECEF) + UTM lidar; projection via ECEF camera poses",
+    "method": "COLMAP GPS model_aligner (ECEF) \u2192 UTM + GEOID18\u2248-33m; OpenMVS dense; point-to-plane ICP vs lidar roof/ground",
     "horizontal_offset_mean_camera_to_core_origin_m": 29.461611631790706,
     "mean_camera_utm": [
       545643.6943074341,
@@ -136,19 +97,59 @@
     "openmvs_dense": {
       "file": "photo_dense_preview.bin",
       "source_ply": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\_work\\openmvs\\scene_dense.ply",
-      "points_in_clip": 10988,
-      "nn_rmse_to_lidar_m": 10.377479351334602,
-      "nn_median_to_lidar_m": 5.377880932170552,
-      "nn_matches": 10988,
-      "geoid_offset_m": -33.0,
-      "note": "Ballpark NN against lidar subsample after ECEF\u2192UTM; not a full ICP. Vertical datum is the dominant uncertainty.",
-      "centroid_align_shift_m": [
-        11.326151847839355,
-        1.8431570529937744,
-        -0.10733222961425781
-      ],
-      "nn_rmse_to_elevated_lidar_m": 8.513541221618652,
-      "nn_median_to_elevated_lidar_m": 3.633286952972412
-    }
+      "points_total_ply": 884003,
+      "points_in_clip_before_icp": 884003,
+      "points_preview": 884003,
+      "before_icp": {
+        "nn_rmse_m": 4.16385900700513,
+        "nn_median_m": 3.2886267716494997,
+        "nn_p90_m": 6.192869395524718
+      },
+      "after_icp": {
+        "nn_rmse_m": 4.243552139631259,
+        "nn_median_m": 3.2259136152389045,
+        "nn_p90_m": 6.78802677128784,
+        "fitness_1m": 0.2538165997636877,
+        "inlier_rmse_1m": 0.5337568562378645,
+        "inlier_count_approx": 64873,
+        "eval_src_count": 255594,
+        "transformation_4x4": [
+          [
+            0.9998857560343787,
+            0.015044847787134082,
+            -0.0014585728027559394,
+            2.9512714387063945
+          ],
+          [
+            -0.01507091770020453,
+            0.9996881941877868,
+            -0.019909340552547755,
+            -1.875580100048594
+          ],
+          [
+            0.0011585850131232216,
+            0.019929048061200237,
+            0.9998007255069098,
+            -5.1327799480134235
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "geo_meta": {
+        "lon": -74.46136654911432,
+        "lat": 40.52145389573986,
+        "h_hae_mean": 13.785190168383334,
+        "ortho_mean": 46.78519016838333
+      },
+      "lidar_reference": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\public\\data\\buildings\\core\\lidar.laz",
+      "nn_median_to_elevated_lidar_m": 3.2259136152389045,
+      "nn_rmse_to_elevated_lidar_m": 4.243552139631259
+    },
+    "ply_read_note": "Previous pass mis-parsed OpenMVS list properties; fixed vertex reader recovers full cloud in clip."
   }
 }

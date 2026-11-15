@@ -1,16 +1,14 @@
-# CoRE Building 3D Thermal Point-Cloud Demo — Build Guide
+# CoRE Building 3D Thermal Demo — Build Guide
 
-Accuracy-first rebuild (2026-11-14). **CoRE only** in the viewer; **RWH is pending** by design.
+**Target experience:** Google Maps–style photorealistic 3D of Rutgers **CoRE**, with a research thermal overlay. **RWH is pending.**
+
+Murat’s reference: Google Maps 3D screenshots in the project store `internal/core-reference/`.
 
 ## What you get
 
-Interactive browser viewer of **measured** geometry for Rutgers **Computing Research & Education (CoRE)**:
-
-1. **Airborne lidar base** (USGS 3DEP / NJ Sandy 2014 tile) clipped around CoRE with ground + context  
-2. **UAV photogrammetry** from Murat’s Core March 22_2 `MAX_*` (COLMAP sparse poses + OpenMVS dense)  
-3. **Thermal layer** projected from paired `IRX_*` using COLMAP camera poses (relative intensity; uncovered points left neutral)
-
-Layout is building-agnostic: `public/data/buildings/<id>/`.
+1. **Primary base (with API key):** streamed **Google Photorealistic 3D Tiles** (Map Tiles API) via NASA-AMMOS `3d-tiles-renderer` + three.js — orbit / tilt / zoom, opens on a three-quarter view of CoRE.
+2. **Thermal add-on:** relative-intensity coloring of **our own** ICP/GPS-registered building points (OpenMVS dense from Core `MAX_*` + COLMAP poses), with a soft z-buffer visibility test per `IRX_*` frame. Toggle + opacity slider. **Not** extracted or derived from Google tiles (Map Tiles API terms).
+3. **Fallback (no key):** USGS lidar + UAV photogrammetry + same thermal layer, clearly labeled — repo runs for anyone.
 
 ## Run
 
@@ -18,104 +16,71 @@ Layout is building-agnostic: `public/data/buildings/<id>/`.
 cd web/thermal-3d-demo
 npm install
 npm run dev
-# or: npm run build && npm run preview
 ```
 
-Openable package (no install): `C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\` → `serve.bat`
+Or openable package: `C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\` → `serve.bat`
 
-## Data sources & licenses
+### Google Maps API key
 
-| Layer | Dataset | Year | License |
-|-------|---------|------|---------|
-| Lidar | `NJ_SdL5_2014` / USGS LPC `USGS_LPC_NJ_New_Jersey_SANDY_LiDAR_15_18TWK445850.laz` | 2014 | USGS 3DEP public domain |
-| RGB / IR | `UAV-RWH-3D-Assets/drone-images/Core March 22_2` `MAX_*` / `IRX_*` | 2025-03-22 flight | Project research imagery |
-| Upgrade path | `NJ_NE6County_B23` (acq. 2023–2025) LAZ via rockyweb/TNM | newer | USGS 3DEP public domain — download was in progress; swap when complete |
+1. In Google Cloud Console, enable **Map Tiles API**.
+2. Create an API key. For a school site, restrict it with **HTTP referrers** (e.g. `https://yourschool.edu/*` and `http://localhost:5173/*` for local dev).
+3. Put the key as a **single line** in:
 
-**Not used as geometry:** OSM extrusions, Google Photorealistic 3D Tiles (API-key streaming only; terms disallow extract/re-host).
+   `C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\google-maps-key.txt`
 
-## Tool versions (this build)
+   Optional alternate: `web/thermal-3d-demo/.env.local` with  
+   `VITE_GOOGLE_MAPS_API_KEY=...`
 
-| Tool | Version | Path / note |
-|------|---------|-------------|
-| Node | ≥18 | |
-| three / vite | 0.170.0 / 5.4.11 | `package.json` pinned |
-| COLMAP | 4.2.1 CUDA (+ nocuda available) | `web/thermal-3d-demo/_work/tools/colmap/` |
-| OpenMVS | 2.4.0 Windows x64 | `_work/tools/OpenMVS/` |
-| PotreeConverter | 2.1.1 | optional octree export |
-| Python | 3.13 + `laspy[lazrs]`, `pyproj`, `Pillow`, `numpy` | |
+4. Restart `npm run dev` / rebuild. Vite reads the file at startup and injects the key at compile time. **Never commit** the key file, `.env.local`, or paste the key into docs/PRs/stores.
+5. Confirm **Map Tiles API** is enabled for the Cloud project and that the key is allowed to call Photorealistic 3D Tiles (`ThreeDTilesService.GetRootTileset`). A key that exists but returns **403 PERMISSION_DENIED / Requests to this API tile method … are blocked** means the API or key restriction is wrong — the viewer automatically falls back to measured lidar/photogrammetry.
 
-`_work/` is local scratch — **do not commit** (raw LAZ, COLMAP DB, OpenMVS depth maps).
+Without a usable key, the viewer stays in **fallback** mode automatically.
 
-## Pipeline steps
+### Attribution (required when tiles are shown)
 
-### 1. Lidar clip (CoRE)
+- Display the **Google Maps logo** (bottom-right in this demo).
+- Display **data attribution** strings aggregated from visible tiles (footer credits strip).
+- **Streaming only** — do not cache, extract, or commit tile geometry/textures. Do not build products by tracing Google tiles.
 
-```bash
-# Download USGS LPC tile covering campus (example Sandy 2014):
-# https://rockyweb.usgs.gov/vdelivery/Datasets/Staged/Elevation/LPC/Projects/NJ_New_Jersey_SANDY_LiDAR_15/...
+Policies: https://developers.google.com/maps/documentation/tile/policies
 
-python _work_scripts/clip_core_laz.py NJ_SdL5_2014
-# Prefer B23 when the LAZ is complete/readable:
-# python _work_scripts/clip_core_laz.py NJ_NE6County_B23
+## Data layout (building-agnostic)
+
+```
+public/data/buildings/<id>/
+  manifest.json
+  lidar.laz / lidar_preview.bin
+  photo_dense_preview.bin
+  registration.json
+  thermal_*.bin / thermal_layer.json
+  colmap_cameras.json
 ```
 
-Writes `public/data/buildings/core/lidar.laz`, `lidar_preview.bin`, `manifest.json`.
+CoRE id: `core`. RWH later: add `rwh/` the same way (needs post-2018 lidar; 2014 Sandy predates Weeks Hall).
 
-### 2. COLMAP sparse (poses)
+## Pipeline notes (measured fallback / thermal registration)
 
-```powershell
-# Stage MAX frames (stride 2 used here → 84 images)
-# Then:
-web/thermal-3d-demo/_work/tools/colmap/bin/colmap.exe automatic_reconstructor `
-  --workspace_path .../workspace --image_path .../images --quality medium --dense 0 --use_gpu 1
-colmap model_aligner ... --ref_is_gps 1 --alignment_type ecef
-python _work_scripts/export_colmap_cameras.py
-```
+| Step | Tooling | Notes |
+|------|---------|--------|
+| Lidar | USGS 3DEP | `NJ_SdL5_2014` clip in use; `NJ_NE6County_B23` (acq. 2023–2025) preferred when LAZ download completes |
+| Poses | COLMAP 4.2.1 | GPS `model_aligner` ECEF; Core March 22_2 `MAX_*` |
+| Dense | OpenMVS 2.4 | COLMAP CUDA dense crashed on RTX 5070 → OpenMVS CPU. Dense is **fallback + alignment reference**, not the hero mesh when Google tiles are on |
+| Register | ECEF→UTM + GEOID18≈−33 m + point-to-plane ICP vs lidar roof/ground | Fix OpenMVS PLY list-property reader before ICP |
+| Thermal | Soft z-buffer per IRX; IR focal from ~48° HFOV; small IR lever-arm | Colors building points; uncovered stay uncolored |
 
-This build: **84/84 images registered**, **33 660 sparse points**, **mean reprojection error 1.29 px**.
+### Flight coverage (Core March 22*)
 
-### 3. Dense photogrammetry
+Primary: **Core March 22_2** — 167 `MAX_*` + 167 `IRX_*` (paired). Sibling folders add unique names (560 unique `MAX_*` staged across March 22 / `_2` / `_3` / `_4`). GPS samples show a tight orbit ~80–120 m AGL over CoRE (~40.521°N, −74.461°W) — façade/oblique-heavy, not a wide nadir grid. That bounds reconstruction to the building mass and near context.
 
-COLMAP `patch_match_stereo` **crashed** on RTX 5070 Laptop (CUDA exit `0xC0000409`). Fallback:
+## Licenses
 
-```powershell
-# InterfaceCOLMAP + DensifyPointCloud (OpenMVS CPU)
-_work_scripts/openmvs_dense.ps1
-python _work_scripts/register_dense_ply.py
-```
+| Layer | Source | License / terms |
+|-------|--------|-----------------|
+| Photorealistic base | Google Map Tiles API | Google Maps Platform ToS + Map Tiles policies (stream, attribute, no extract) |
+| Lidar | USGS 3DEP | Public domain |
+| UAV RGB/IR | Project flights | Research use |
+| three / 3d-tiles-renderer | npm | MIT |
 
-Dense PLY ≈ 884 k points; after ECEF→UTM + Core clip + centroid align to elevated lidar: **~11 k points** in clip, **NN median ≈ 3.6 m** / **RMSE ≈ 8.5 m** vs elevated lidar (ballpark, not full ICP). Treat as façade detail layer, **not** the metric base.
+## RWH later
 
-### 4. Thermal projection
-
-```bash
-python _work_scripts/register_and_project_thermal.py
-```
-
-Projects `IRX_*` with COLMAP ECEF poses onto lidar points. **Uncovered → mask 0 / neutral.** Units: **relative thermal intensity** (not confirmed radiometric).
-
-This build: **42 IR frames used**, **~16.9%** of a 400 k lidar subsample covered.
-
-EnvCalib weather sliders: **omitted** (coefficients not wired; do not fake response).
-
-### 5. Viewer
-
-Vite + Three.js Points loader over `*_preview.bin`. Minimal UI: layers, legend with units, scale bar, north, provenance footer. `RWH: pending` control disabled.
-
-## RWH later (do not invent)
-
-Needs:
-
-1. Post-2018 lidar covering Weeks Hall (e.g. finished `NJ_NE6County_B23` tiles) — RWH opened 2018; **2014 Sandy does not contain it**  
-2. Optional RWH RGB flight (none in dump — only `IRX_*`)  
-3. Same folder pattern: `public/data/buildings/rwh/` + manifest entry  
-
-Keep RWH out of the viewer until those exist.
-
-## Google 3D Tiles (optional context only)
-
-Would need Murat’s **Maps 3D / Photorealistic tiles API key + billing**. Cannot be committed or school-hosted as extracted geometry. Leave out until requested.
-
-## School embed size
-
-Committed Core preview data ≈ **14 MB** (lidar bin + thermal + laz). Full `_work` intermediates stay local.
+Needs finished B23 (or other post-2018) lidar covering Weeks Hall, IRX campaigns already in the dump, optional RGB. Keep RWH out of the viewer until then (`RWH: pending`).
