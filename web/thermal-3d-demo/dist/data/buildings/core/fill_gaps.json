@@ -1,0 +1,11 @@
+{
+  "method": "photo walls + lidar gap-fill Poisson depth11; gentle density trim; Taubin polish",
+  "triangles": 380000,
+  "vertices": 190836,
+  "glb_mb": 7.614352,
+  "lod_mb": 3.319724,
+  "color_mean": 0.4705094949410166,
+  "photo_pts": 387140,
+  "lidar_gap_fill_pts": 61355,
+  "cropped_half_m": 70
+}

@@ -27,16 +27,17 @@
       <aside class="panel">
         <div class="mode" id="modeBadge">Loading…</div>
         <label class="row" id="rowTiles"><input type="checkbox" id="showTiles" checked /> Google 3D base</label>
-        <label class="row" id="rowLidar"><input type="checkbox" id="showLidar" /> Lidar context</label>
-        <label class="row" id="rowPhoto"><input type="checkbox" id="showPhoto" /> UAV photogrammetry</label>
-        <label class="row"><input type="checkbox" id="showThermal" checked /> Thermal layer</label>
-        <label class="row">Thermal opacity <input type="range" id="thermalOpacity" min="0" max="1" step="0.05" value="0.85" /></label>
-        <label class="row">Point size <input type="range" id="pointSize" min="0.4" max="3" step="0.1" value="1.0" /></label>
+        <label class="row"><input type="checkbox" id="showSolid" checked /> Solid building (gap-filled)</label>
+        <label class="row"><input type="checkbox" id="showLidar" /> Lidar context</label>
+        <label class="row"><input type="checkbox" id="showPhoto" /> Raw UAV points</label>
+        <label class="row"><input type="checkbox" id="showThermal" /> Thermal overlay</label>
+        <label class="row">Thermal opacity <input type="range" id="thermalOpacity" min="0" max="1" step="0.05" value="0.75" /></label>
+        <label class="row">Point size <input type="range" id="pointSize" min="0.4" max="3" step="0.1" value="1.1" /></label>
         <div class="legend">
           <div class="legend-title">Thermal (relative intensity)</div>
           <div class="ramp" aria-hidden="true"></div>
           <div class="legend-scale"><span>cooler</span><span>not °C</span><span>warmer</span></div>
-          <p class="note">Shown only where IRX frames saw the surface. Own registered points — not extracted from Google tiles.</p>
+          <p class="note">Solid mesh fills drone gaps with lidar + plausible materials. Thermal is optional overlay on measured IR coverage.</p>
         </div>
       </aside>
 

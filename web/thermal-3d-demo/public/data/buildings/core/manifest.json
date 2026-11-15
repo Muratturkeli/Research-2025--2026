@@ -58,6 +58,27 @@
       "registration_to_lidar_nn_median_m": 3.2259136152389045,
       "icp_fitness_1m": 0.2538165997636877,
       "icp_inlier_rmse_1m": 0.5337568562378645
+    },
+    {
+      "id": "filled_solid",
+      "type": "gap_filled_mesh",
+      "role": "primary_complete_geometry",
+      "note": "photo walls + lidar gap-fill Poisson depth11; gentle density trim; Taubin polish",
+      "files": {
+        "glb": "core_solid.glb",
+        "lod_glb": "core_solid_lod.glb",
+        "ply": "core_solid.ply"
+      },
+      "vertices": 190836,
+      "triangles": 380000
+    },
+    {
+      "id": "filled_points",
+      "type": "gap_filled_points",
+      "files": {
+        "preview_bin": "filled_preview.bin"
+      },
+      "points": 953662
     }
   ],
   "pending": {

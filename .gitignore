@@ -50,3 +50,6 @@ web/thermal-3d-demo/.env.local
 
 web/thermal-3d-demo/**/photo_dense_aligned.npz
 
+
+web/thermal-3d-demo/**/filled_preview.bin
+
