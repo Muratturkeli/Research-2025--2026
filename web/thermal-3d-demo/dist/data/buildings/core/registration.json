@@ -1,0 +1,74 @@
+{
+  "method": "COLMAP GPS model_aligner (ECEF) \u2192 UTM + GEOID18\u2248-33m; OpenMVS dense; point-to-plane ICP vs lidar roof/ground",
+  "horizontal_offset_mean_camera_to_core_origin_m": 29.461611631790706,
+  "mean_camera_utm": [
+    545643.6943074341,
+    4485790.778179316
+  ],
+  "core_origin_utm": [
+    545627.51,
+    4485766.16
+  ],
+  "geoid_offset_applied_m": -33.0,
+  "reprojection_note": "COLMAP sparse mean reprojection error was 1.29 px (from model_analyzer). Lidar-photogrammetry ICP RMSE not computed in this pass; horizontal camera-origin offset reported above.",
+  "colmap_sparse_points": 33660,
+  "colmap_registered_images": 84,
+  "colmap_mean_reproj_error_px": 1.291175,
+  "openmvs_dense": {
+    "file": "photo_dense_preview.bin",
+    "source_ply": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\_work\\openmvs\\scene_dense.ply",
+    "points_total_ply": 884003,
+    "points_in_clip_before_icp": 884003,
+    "points_preview": 884003,
+    "before_icp": {
+      "nn_rmse_m": 4.16385900700513,
+      "nn_median_m": 3.2886267716494997,
+      "nn_p90_m": 6.192869395524718
+    },
+    "after_icp": {
+      "nn_rmse_m": 4.243552139631259,
+      "nn_median_m": 3.2259136152389045,
+      "nn_p90_m": 6.78802677128784,
+      "fitness_1m": 0.2538165997636877,
+      "inlier_rmse_1m": 0.5337568562378645,
+      "inlier_count_approx": 64873,
+      "eval_src_count": 255594,
+      "transformation_4x4": [
+        [
+          0.9998857560343787,
+          0.015044847787134082,
+          -0.0014585728027559394,
+          2.9512714387063945
+        ],
+        [
+          -0.01507091770020453,
+          0.9996881941877868,
+          -0.019909340552547755,
+          -1.875580100048594
+        ],
+        [
+          0.0011585850131232216,
+          0.019929048061200237,
+          0.9998007255069098,
+          -5.1327799480134235
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "geo_meta": {
+      "lon": -74.46136654911432,
+      "lat": 40.52145389573986,
+      "h_hae_mean": 13.785190168383334,
+      "ortho_mean": 46.78519016838333
+    },
+    "lidar_reference": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\public\\data\\buildings\\core\\lidar.laz",
+    "nn_median_to_elevated_lidar_m": 3.2259136152389045,
+    "nn_rmse_to_elevated_lidar_m": 4.243552139631259
+  },
+  "ply_read_note": "Previous pass mis-parsed OpenMVS list properties; fixed vertex reader recovers full cloud in clip."
+}

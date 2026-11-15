@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CoRE Building — Thermal 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-DD-UQn4b.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-B83sDF0N.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="c"></canvas>
+
+      <header class="top">
+        <div>
+          <h1>CoRE Building</h1>
+          <p class="sub" id="subtitle">Rutgers Busch Campus · thermal overlay</p>
+        </div>
+        <div class="buildings">
+          <button type="button" class="active" disabled>CoRE</button>
+          <button type="button" class="pending" disabled title="Deferred to a later pass">RWH: pending</button>
+        </div>
+      </header>
+
+      <aside class="panel">
+        <div class="mode" id="modeBadge">Loading…</div>
+        <label class="row" id="rowTiles"><input type="checkbox" id="showTiles" checked /> Google 3D base</label>
+        <label class="row"><input type="checkbox" id="showSolid" checked /> Solid building (gap-filled)</label>
+        <label class="row"><input type="checkbox" id="showLidar" /> Lidar context</label>
+        <label class="row"><input type="checkbox" id="showPhoto" /> Raw UAV points</label>
+        <label class="row"><input type="checkbox" id="showThermal" /> Thermal overlay</label>
+        <label class="row">Thermal opacity <input type="range" id="thermalOpacity" min="0" max="1" step="0.05" value="0.75" /></label>
+        <label class="row">Point size <input type="range" id="pointSize" min="0.4" max="3" step="0.1" value="1.1" /></label>
+        <div class="legend">
+          <div class="legend-title">Thermal (relative intensity)</div>
+          <div class="ramp" aria-hidden="true"></div>
+          <div class="legend-scale"><span>cooler</span><span>not °C</span><span>warmer</span></div>
+          <p class="note">Solid mesh fills drone gaps with lidar + plausible materials. Thermal is optional overlay on measured IR coverage.</p>
+        </div>
+      </aside>
+
+      <div class="compass" id="compass" aria-label="North">N</div>
+      <div class="scale" id="scale"><i></i><span>50 m</span></div>
+
+      <div class="maps-attrib" id="mapsAttrib" hidden>
+        <img class="glogo" src="./attribution/google_on_white.svg" alt="Google Maps" width="74" height="24" />
+        <div class="credits" id="tileCredits"></div>
+      </div>
+
+      <footer class="prov" id="prov">Loading…</footer>
+      <div class="loading" id="loading">Starting viewer…</div>
+    </div>
+  </body>
+</html>

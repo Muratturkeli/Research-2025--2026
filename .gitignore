@@ -1,0 +1,55 @@
+# Large media — never commit the UAV dump or photogrammetry work folders
+UAV-RWH-3D-Assets/
+**/models/_src/
+**/thermal/_src/
+**/*.las
+**/*.laz
+# Allow small per-building lidar clips shipped with the demo
+!web/thermal-3d-demo/**/data/buildings/**/lidar.laz
+**/*.p4b
+**/*.p4d
+**/*.p4r
+**/*.splat
+**/*.spz
+**/*.osgb
+**/*.tif
+**/*.tiff
+**/*.dng
+**/*.mp4
+**/*.zip
+
+# Node / tooling
+node_modules/
+.vite/
+*.log
+.DS_Store
+.env
+.env.*
+# Ignore generic dist folders but keep the demo static build for school hosts
+dist/
+!web/thermal-3d-demo/dist/
+!web/thermal-3d-demo/dist/**
+# Authoring scratch next to clone
+osm-map.xml
+osm-buildings.json
+osm-buildings-parsed.json
+overpass-query.txt
+_parse_osm.py
+_curate_textures.py
+_export_buildings_json.py
+nominatim-*.json
+_work_scripts/
+web/thermal-3d-demo/_work/
+web/thermal-3d-demo/screenshots.mjs
+**/playwright-report/
+
+web/thermal-3d-demo/.env.local
+**/.env.local
+**/google-maps-key.txt
+
+
+web/thermal-3d-demo/**/photo_dense_aligned.npz
+
+
+web/thermal-3d-demo/**/filled_preview.bin
+

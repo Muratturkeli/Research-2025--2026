@@ -1,0 +1,4 @@
+﻿CoRE lidar + thermal point-cloud demo (RWH pending)
+
+npm install && npm run dev
+# or: serve.bat (serves dist/ on :8765)

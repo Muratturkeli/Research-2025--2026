@@ -1,0 +1,176 @@
+{
+  "building_id": "core",
+  "name": "Computing Research & Education Building (CoRE)",
+  "geometry_layers": [
+    {
+      "id": "lidar",
+      "type": "airborne_lidar",
+      "dataset": "NJ_SdL5_2014",
+      "year": "2014",
+      "acquisition": "Post-Sandy QL2",
+      "license": "USGS 3DEP public domain",
+      "crs": "EPSG:26918 (NAD83 UTM zone 18N); local XY relative to origin; Z relative to ~1st pct ground",
+      "origin_utm18n": [
+        545627.51,
+        4485766.16
+      ],
+      "origin_lonlat": [
+        -74.46135,
+        40.52137
+      ],
+      "clip_half_extent_m": 220.0,
+      "point_count_clip": 651333,
+      "point_count_preview": 651333,
+      "z0_m": 26.05,
+      "class_counts": {
+        "1": 272034,
+        "2": 200375,
+        "7": 69,
+        "17": 132143,
+        "18": 46712
+      },
+      "files": {
+        "laz": "lidar.laz",
+        "preview_bin": "lidar_preview.bin"
+      }
+    },
+    {
+      "id": "colmap_sparse",
+      "type": "uav_photogrammetry_sparse",
+      "source": "COLMAP 4.2.1 CUDA, 84 MAX frames stride-2 from Core March 22_2",
+      "points": 33660,
+      "registered_images": 84,
+      "mean_reproj_error_px": 1.291175,
+      "status": "poses used for thermal projection"
+    },
+    {
+      "id": "photo_dense",
+      "type": "uav_photogrammetry_dense",
+      "role": "primary_building_geometry",
+      "source": "OpenMVS dense from COLMAP ECEF-aligned Core March 22_2 MAX (ICP to lidar)",
+      "points_in_clip": 884003,
+      "points_preview": 884003,
+      "files": {
+        "preview_bin": "photo_dense_preview.bin",
+        "aligned_npz": "photo_dense_aligned.npz"
+      },
+      "registration_to_lidar_nn_rmse_m": 4.243552139631259,
+      "registration_to_lidar_nn_median_m": 3.2259136152389045,
+      "icp_fitness_1m": 0.2538165997636877,
+      "icp_inlier_rmse_1m": 0.5337568562378645
+    },
+    {
+      "id": "filled_solid",
+      "type": "gap_filled_mesh",
+      "role": "primary_complete_geometry",
+      "note": "photo walls + lidar gap-fill Poisson depth11; gentle density trim; Taubin polish",
+      "files": {
+        "glb": "core_solid.glb",
+        "lod_glb": "core_solid_lod.glb",
+        "ply": "core_solid.ply"
+      },
+      "vertices": 190836,
+      "triangles": 380000
+    },
+    {
+      "id": "filled_points",
+      "type": "gap_filled_points",
+      "files": {
+        "preview_bin": "filled_preview.bin"
+      },
+      "points": 953662
+    }
+  ],
+  "pending": {
+    "rwh": "Deferred \u2014 add lidar clip + thermal later; do not invent geometry."
+  },
+  "thermal_layer": {
+    "type": "projected_thermal_on_building_points",
+    "units": "relative_thermal_intensity",
+    "radiometric": false,
+    "source_flight": "Core March 22_2 IRX_*",
+    "visibility": "soft z-buffer per IR frame",
+    "coverage_fraction": 0.99772,
+    "frames_used_count": 84,
+    "point_source": "photo_dense",
+    "files": {
+      "thermal_building": "thermal_building.bin",
+      "thermal_building_mask": "thermal_building_mask.bin",
+      "thermal_visible": "thermal_visible.bin"
+    }
+  },
+  "registration": {
+    "method": "COLMAP GPS model_aligner (ECEF) \u2192 UTM + GEOID18\u2248-33m; OpenMVS dense; point-to-plane ICP vs lidar roof/ground",
+    "horizontal_offset_mean_camera_to_core_origin_m": 29.461611631790706,
+    "mean_camera_utm": [
+      545643.6943074341,
+      4485790.778179316
+    ],
+    "core_origin_utm": [
+      545627.51,
+      4485766.16
+    ],
+    "geoid_offset_applied_m": -33.0,
+    "reprojection_note": "COLMAP sparse mean reprojection error was 1.29 px (from model_analyzer). Lidar-photogrammetry ICP RMSE not computed in this pass; horizontal camera-origin offset reported above.",
+    "colmap_sparse_points": 33660,
+    "colmap_registered_images": 84,
+    "colmap_mean_reproj_error_px": 1.291175,
+    "openmvs_dense": {
+      "file": "photo_dense_preview.bin",
+      "source_ply": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\_work\\openmvs\\scene_dense.ply",
+      "points_total_ply": 884003,
+      "points_in_clip_before_icp": 884003,
+      "points_preview": 884003,
+      "before_icp": {
+        "nn_rmse_m": 4.16385900700513,
+        "nn_median_m": 3.2886267716494997,
+        "nn_p90_m": 6.192869395524718
+      },
+      "after_icp": {
+        "nn_rmse_m": 4.243552139631259,
+        "nn_median_m": 3.2259136152389045,
+        "nn_p90_m": 6.78802677128784,
+        "fitness_1m": 0.2538165997636877,
+        "inlier_rmse_1m": 0.5337568562378645,
+        "inlier_count_approx": 64873,
+        "eval_src_count": 255594,
+        "transformation_4x4": [
+          [
+            0.9998857560343787,
+            0.015044847787134082,
+            -0.0014585728027559394,
+            2.9512714387063945
+          ],
+          [
+            -0.01507091770020453,
+            0.9996881941877868,
+            -0.019909340552547755,
+            -1.875580100048594
+          ],
+          [
+            0.0011585850131232216,
+            0.019929048061200237,
+            0.9998007255069098,
+            -5.1327799480134235
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "geo_meta": {
+        "lon": -74.46136654911432,
+        "lat": 40.52145389573986,
+        "h_hae_mean": 13.785190168383334,
+        "ortho_mean": 46.78519016838333
+      },
+      "lidar_reference": "C:\\Users\\murat\\OneDrive\\Documents\\Research-2025--2026-thermal-demo\\web\\thermal-3d-demo\\public\\data\\buildings\\core\\lidar.laz",
+      "nn_median_to_elevated_lidar_m": 3.2259136152389045,
+      "nn_rmse_to_elevated_lidar_m": 4.243552139631259
+    },
+    "ply_read_note": "Previous pass mis-parsed OpenMVS list properties; fixed vertex reader recovers full cloud in clip."
+  }
+}
