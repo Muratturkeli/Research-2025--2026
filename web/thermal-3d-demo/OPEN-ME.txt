@@ -1,0 +1,19 @@
+RWH × CoRE Thermal 3D — open instructions
+=========================================
+
+This folder IS the demo (Vite + Three.js).
+
+Dev:
+  npm install
+  npm run dev
+  → http://localhost:5173
+
+Built static view (do NOT double-click dist\index.html — file:// breaks ES modules):
+  Double-click serve.bat
+  or:  npm run preview
+
+Wrong place people often look:
+  Documents\UAV-RWH-3D-Assets   ← imagery dump only
+
+Standalone built package (same serve.bat pattern):
+  Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\

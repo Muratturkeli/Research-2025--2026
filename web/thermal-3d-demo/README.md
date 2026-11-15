@@ -6,6 +6,18 @@ Looks-first science UI: orbit / zoom, RGB↔thermal blend, palette contrast, and
 
 ## Quick start
 
+**Not** under `UAV-RWH-3D-Assets` (that folder is the imagery dump). This app lives at:
+
+```text
+Research-2025--2026/web/thermal-3d-demo
+```
+
+On Murat’s machine the working clone is:
+
+```text
+C:\Users\murat\OneDrive\Documents\Research-2025--2026-thermal-demo\web\thermal-3d-demo
+```
+
 ```bash
 cd web/thermal-3d-demo
 npm install
@@ -22,6 +34,14 @@ npm run preview
 ```
 
 Embed the `dist/` folder as static files or an iframe. Paths are relative (`base: './'`).
+
+**Standalone HTML package** (no `npm install` needed to view): copy of `dist/` at
+
+```text
+C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\
+```
+
+Double-click `serve.bat` there. Opening `index.html` via `file://` fails (ES modules).
 
 ## What geometry is this?
 

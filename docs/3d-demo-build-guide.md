@@ -31,11 +31,17 @@ Research-2025--2026/
 
 ## Run locally
 
+Do **not** look under `UAV-RWH-3D-Assets` for `npm run dev` — that directory is the raw UAV dump. The Vite app is `web/thermal-3d-demo` in this repo (local clone often named `Research-2025--2026-thermal-demo`).
+
 ```bash
 cd web/thermal-3d-demo
 npm install
 npm run dev
 ```
+
+Built static copy for double-click serving (not `file://`):
+
+`C:\Users\murat\OneDrive\Documents\UAV-RWH-3D-Assets\thermal-3d-demo-html\` → run `serve.bat`
 
 ## Geometry source (v1)
 
